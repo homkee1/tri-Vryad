@@ -1,0 +1,17 @@
+.vs/
+out/
+build/
+*.o
+*.a
+*.so
+*.exe
+*.dll
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+CMakeFiles/
+cmake_build_directory/
+Makefile
