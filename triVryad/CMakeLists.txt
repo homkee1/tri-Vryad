@@ -8,7 +8,7 @@ add_executable(TriVRyad
     main.cpp
     Game.cpp
     Gem.cpp
-)
+ )
 target_compile_definitions(TriVRyad PRIVATE
     UNICODE
     _UNICODE

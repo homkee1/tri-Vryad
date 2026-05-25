@@ -1,9 +1,6 @@
 ﻿#include <cmath>
 #include "Gem.h"
-#include <stdio.h>
-#include <string>
 #include "Constants.h"
-#include <windows.h>
 
 Gem::Gem(int x, int y, Gdiplus::Color c, GemType t)
 	: color(c), type(t), isMoving(false) {
@@ -14,17 +11,14 @@ Gem::Gem(int x, int y, Gdiplus::Color c, GemType t)
 }
 
 POINT Gem::getPos() const {
-	std::lock_guard<std::mutex> lock(mtx_);
 	return pos;
 }
 
 bool Gem::IsMoving() const {
-	std::lock_guard<std::mutex> lock(mtx_);
 	return isMoving;
 }
 
 Gdiplus::Color Gem::getColor() const {
-	std::lock_guard<std::mutex> lock(mtx_);
 	return color;
 }
 
@@ -33,7 +27,6 @@ GemType Gem::getType() const {
 }
 
 void Gem::ChangePos(int newX, int newY) {
-	std::lock_guard<std::mutex> lock(mtx_);
 	pos.x = newX * CELL_SIZE;
 	pos.y = newY * CELL_SIZE;
 	targetPos = pos;
@@ -41,7 +34,6 @@ void Gem::ChangePos(int newX, int newY) {
 }
 
 void Gem::SetTargetPos(int newX, int newY, const LARGE_INTEGER& startTime) {
-	std::lock_guard<std::mutex> lock(mtx_);
 	targetPos.x = newX * CELL_SIZE;
 	targetPos.y = newY * CELL_SIZE;
 	isMoving = true;
@@ -49,13 +41,10 @@ void Gem::SetTargetPos(int newX, int newY, const LARGE_INTEGER& startTime) {
 }
 
 void Gem::ChangeColor(Gdiplus::Color newColor) {
-	std::lock_guard<std::mutex> lock(mtx_);
 	color = newColor;
 }
 
-void Gem::Update(int cellWidth, int cellHeight) {
-	std::lock_guard<std::mutex> lock(mtx_);
-
+void Gem::Update() {
 	if (!isMoving) return;
 
 	LARGE_INTEGER currentTime;
@@ -91,9 +80,7 @@ void Gem::Update(int cellWidth, int cellHeight) {
 	pos.y = static_cast<int>(currentY + round(dy * t));
 }
 
-void Gem::Draw(HDC hdc, Gdiplus::Image* image, int cellWidth, int cellHeight) const {
-	Gdiplus::Graphics graphics(hdc);
-
+void Gem::Draw(Gdiplus::Graphics& graphics, Gdiplus::Image* image, int cellWidth, int cellHeight) const {
 	POINT safPos = getPos();
 	int scaledX = safPos.x * cellWidth / CELL_SIZE;
 	int scaledY = safPos.y * cellHeight / CELL_SIZE;
@@ -101,10 +88,13 @@ void Gem::Draw(HDC hdc, Gdiplus::Image* image, int cellWidth, int cellHeight) co
 	if (image && image->GetLastStatus() == Gdiplus::Ok) {
 		graphics.DrawImage(image, scaledX, scaledY, cellWidth, cellHeight);
 	}
+	else {
+		Gdiplus::SolidBrush brush(getColor());
+		graphics.FillEllipse(&brush, scaledX + 2, scaledY + 2, cellWidth - 4, cellHeight - 4);
+	}
 }
 
 void Gem::Delete() {
-	std::lock_guard<std::mutex> lock(mtx_);
 	pos = { -1, -1 };
 	color = Gdiplus::Color(0, 0, 0, 0);
 }
