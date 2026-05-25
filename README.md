@@ -1,6 +1,3 @@
----
-
-```markdown
 # tri v ryad
 
 > match-3 game built on native win32 and gdi+. because modern engines are bloated.
