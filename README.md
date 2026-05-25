@@ -1,23 +1,20 @@
 # tri v ryad
 
-> match-3 game built on native win32 and gdi+. because modern engines are bloated.
+> match-3 game built on native win32 and gdi+. cuz modern engines r fat and bloated.
 
 ![](https://raw.githubusercontent.com/homkee1/tri-Vryad/assets/readme/gifs/gameplay.gif)
 
-* **OS:** Windows 10/11
-* **Language:** C++17
-* **Build System:** CMake 3.16+
-* **License:** MIT
+win10/11 | c++17 | cmake 3.16+
 
 ---
 
-## What is this?
+## what is this even
 
-A basic match-3 puzzle game built entirely on bare-metal Windows APIs. No Unity, no Unreal, no massive runtimes. Just native GDI+ and C++17.
+its just a classic match-3 puzzle game built on bare-metal win32 apis. no unity, no unreal, no 100gb installs. just native gdi+ and c++17.
 
-* Swap gems to match 3 or more in a row.
-* Matches trigger chain reactions and board state updates.
-* Supports custom PNG textures, with an automatic fallback to vector shapes if no images are loaded.
+* swap gems to make 3+ in a row
+* gems go boom, gravity pulls everything down
+* feed it custom pngs or let it draw colored circles when u r too lazy to setup textures
 
 ```
 selected gem `[X: 2, Y: 3]` ↔ swap with `[X: 3, Y: 3]`
@@ -27,55 +24,52 @@ gravity pulls everything down, new gems fall.
 
 ---
 
-## Key Features
+## why its actually good
 
-* **No idle CPU usage:** When nothing is moving or updating, the game suspends active rendering to save laptop battery.
-* **Fair spawn logic:** The board generator ensures no pre-existing matches are present when a new game starts.
-* **Asynchronous loading:** Loading custom PNG directories runs in a background thread to prevent the UI from freezing.
-* **Registry-based configuration:** If enabled, settings like grid size, rendering quality, and paths are saved to the Windows Registry.
+* **0% cpu idle:** when u r not clicking anything and animations r not running, the game just chill-ticks in the background. saves your laptop battery.
+* **anti-cheat spawn:** board generator checks for matches on startup, so u dont get free wins on spawn.
+* **no laggy freezes:** loading custom folders of pngs runs in a background thread, so your window doesnt crash or white-out.
+* **saves settings:** check "сохранение настроек" and your grid size, quality, and paths r saved straight to registry.
 
-### Settings
-Adjust grid sizes, animation speeds, or rendering quality (from low-res nearest-neighbor to high-quality bicubic interpolation).
+### settings modal
+change grid size, animation speed, or rendering quality from low-res nearest-neighbor to high-quality bicubic.
 
 ![](https://raw.githubusercontent.com/homkee1/tri-Vryad/assets/readme/images/settings_preview.jpg)
 
-### Vector Fallback
-If no custom textures are specified, GDI+ renders anti-aliased geometric circles instead.
+### vector fallback
+no custom pngs? gdi+ will automatically draw smooth colored circles instead. no crashes, no missing textures.
 
 ![](https://raw.githubusercontent.com/homkee1/tri-Vryad/assets/readme/gifs/vector_fallback.gif)
 
 ---
 
-## Under the Hood
+## how it actually works
 
-1. **Double Buffering:** To prevent window flickering, everything is rendered to an in-memory bitmap first, then copied to the screen in a single `BitBlt` call.
-2. **Animation Timing:** Uses `QueryPerformanceCounter` for high-precision frame delta calculations. (Note: `SpeedAnimationA4ChangePos` has a typo in the name—do not rename it, or the physics might break).
-3. **Quality Scaling:** High-quality rendering mode forces GDI+ to use bicubic interpolation for custom textures.
+1. **no flickering:** we paint background and gems to a virtual bitmap in ram first, then slam it to screen using `BitBlt`. 
+2. **timer:** uses `QueryPerformanceCounter` to calculate elapsed time. variable `SpeedAnimationA4ChangePos` has a typo in the middle. dont touch it or gems will fly away.
+3. **rendering quality:** high quality setting tells gdi+ to use bicubic interpolation so your custom pngs look crisp.
 
 ---
 
-## Quick Start
+## quick start
 
-### Prerequisites
-* Windows 10/11
-* CMake 3.16+
-* MSVC or MinGW (C++17 compatible)
+### build options
 
 ```bash
-# Clone the repository
+# clone the repo
 git clone https://github.com/homkee1/tri-Vryad.git
 cd tri-Vryad
 
-# Build
+# generate build files and compile
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
 
-# Run
+# run
 ./Release/TriVRyad.exe
 ```
 
-### Building with MinGW
+### build with mingw
 ```bash
 mkdir build && cd build
 cmake -G "MinGW Makefiles" ..
@@ -84,14 +78,21 @@ mingw32-make
 
 ---
 
-## Troubleshooting
+## its broken now what
 
-* **Crash on huge grids (e.g. 9999x9999):** You attempted to allocate a massive 2D vector of smart pointers. Keep the grid size under 50.
-* **Black screen:** The window was minimized or resized to 0x0.
-* **Gems are just circles:** The executable cannot locate your images. Place your custom textures in a folder named `png` next to the executable, or click "Обзор" in the settings to set the path manually.
-* **Settings are not saving:** Ensure the "Сохранение настроек" checkbox is ticked and the process has sufficient permissions to write to the registry.
+* **"i set grid to 99999 and the game crashed"**
+  yeah, u tried to allocate billions of smart pointers in a 2d vector. your ram died, windows said no. keep grid under 50 buddy.
+
+* **"why is screen black"**
+  u probably minimized the window or resized it to 0x0. 
+
+* **"gems r just circles"**
+  the game cant find your png folder. put some square pngs into a folder named `png` next to exe or click "обзор" and pick it.
+
+* **"settings didnt save"**
+  check "сохранение настроек" checkbox first. also check registry permissions.
 
 ---
 
-*Written in raw Win32, C++, and pain.*
+*made with win32 raw pointers and a lot of patience*
 ```
