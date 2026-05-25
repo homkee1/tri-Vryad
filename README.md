@@ -57,8 +57,7 @@ no custom pngs? gdi+ will automatically draw smooth colored circles instead. no 
 ```bash
 git clone https://github.com/homkee1/tri-Vryad.git
 cd tri-Vryad
-
-# generate build files and compile
+#compile
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
