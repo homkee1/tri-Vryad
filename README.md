@@ -52,26 +52,18 @@ no custom pngs? gdi+ will automatically draw smooth colored circles instead. no 
 
 ## quick start
 
-### build options
+### build
 
 ```bash
 git clone https://github.com/homkee1/tri-Vryad.git
 cd tri-Vryad
 #compile
 mkdir build && cd build
-cmake ..
-cmake --build . --config Release
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
 
 ./Release/TriVRyad.exe
 ```
-
-### build with mingw
-```bash
-mkdir build && cd build
-cmake -G "MinGW Makefiles" ..
-mingw32-make
-```
-
 ---
 
 ## its broken now what
